@@ -15,6 +15,7 @@ avg
 mean((avg - test_set$son)^2)
 ####Questo equivale ...
 fit <- lm(son ~ father, data = train_set)
+fit
 y_hat <- fit$coef[1] + fit$coef[2]*test_set$father
 mean((y_hat - test_set$son)^2)
 
