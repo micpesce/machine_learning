@@ -1,6 +1,8 @@
 library(tidyverse)
 library(purrr)
 library(pdftools)
+library(dslabs)
+library(lubridate)
 
 fn <- system.file("extdata", "RD-Mortality-Report_2015-18-180531.pdf", package="dslabs")
 dat <- map_df(str_split(pdf_text(fn), "\n"), function(s){
@@ -60,10 +62,12 @@ dat %>%
   geom_line(lwd = 2)
 
 
-
+##domanda q3
 library(broom)
-mnist_27$train %>% glm(y ~ x_2, family = "binomial", data = .) %>% tidy()
-qplot(x_2, y, data = mnist_27$train)
-
-loess(x_2 ~ as.numeric(y), data = mnist_27$train, degree = 1)
-mnist_27$train
+data(mnist_27)
+mnist_27$train %>% glm(y ~ x_1 +x_2, family = "binomial", data = .) %>% tidy()
+#risposta q3
+mnist_27$train %>% 
+  mutate(y = ifelse(y=="7", 1, 0)) %>%
+  ggplot(aes(x_2, y)) + 
+  geom_smooth(method = "loess")
