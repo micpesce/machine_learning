@@ -12,3 +12,36 @@ fit <- rpart(y ~ ., data = dat)
 #Which code correctly uses rpart to fit a regression tree and saves the result to fit?
 plot(fit, margin = 0.1)
 text(fit, cex = 0.75)
+
+#q3
+
+dat %>% 
+  mutate(y_hat = predict(fit)) %>% 
+  ggplot() +
+  geom_point(aes(x, y)) +
+  geom_step(aes(x, y_hat), col=2)
+
+#q4
+
+library(randomForest)
+fit <- randomForest(y ~ x, data = dat)
+  dat %>% 
+  mutate(y_hat = predict(fit)) %>% 
+  ggplot() +
+  geom_point(aes(x, y)) +
+  geom_step(aes(x, y_hat), col = 2)
+
+  
+  #q5
+  
+  plot(fit)
+  
+  #q6
+  
+  library(randomForest)
+  fit <- randomForest(y ~ x, data = dat, nodesize = 50, maxnodes = 25)
+    dat %>% 
+    mutate(y_hat = predict(fit)) %>% 
+    ggplot() +
+    geom_point(aes(x, y)) +
+    geom_step(aes(x, y_hat), col = 2)
