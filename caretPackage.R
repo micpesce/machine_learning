@@ -84,3 +84,31 @@ confusionMatrix(fit_rpart)
 #Plot the tree from the best fitting model of the analysis you ran in Q5.
 #Which gene is at the first split?
 fit_rpart$finalModel
+
+
+
+#q7
+#We can see that with just seven genes, we are able to predict the tissue type.
+#Now let's see if we can predict the tissue type with even fewer genes using a Random Forest.
+#Use the train function and the rf method to train a Random Forest.
+#Try out values of mtry ranging from seq(50, 200, 25) (you can also explore other values on your own).
+#What mtry value maximizes accuracy? To permit small nodesize to grow as we did with the classification trees, use the following argument: nodesize = 1.
+#Note: This exercise will take some time to run. If you want to test out your code first,
+#try using smaller values with ntree. Set the seed to 1991 again.
+
+#What value of mtry maximizes accuracy?
+set.seed(1991)
+fit_rtree <- with(tissue_gene_expression, 
+                  train(x, y, method = "rf",
+                        tuneGrid = data.frame(mtry = seq(50,200,25)),
+                         nodesize = 1 ))
+print(fit_rtree)
+#q8
+imp <- varImp(fit_rtree)
+imp
+
+#q9
+
+imp
+
+#output VarImp con CFHR4=25.03 AL 4° POSTO (RANK)
