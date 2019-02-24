@@ -155,16 +155,38 @@ schools %>% select(id,size,score,score_reg) %>% arrange(desc(score_reg)) %>% top
 
 
 #q6
-alfas <- seq(10, 250)
-
-rmses <- sapply(alfas, function(alfa){
-  
-
-
-schools %>% mutate (score_reg=overall + ((score - overall)*size/(size+alfa)))
-  
-  return(mean(schools$score_reg-schools$quality)^2)
+#Notice that this improves things a bit.
+#The number of small schools that are not highly ranked is now lower.
+#Is there a better ? Find the  that minimizes the RMSE
+alphas <- seq(10,250)
+rmse <- sapply(alphas, function(alpha){
+  score_reg <- sapply(scores, function(x) overall+sum(x-overall)/(length(x)+alpha))
+  mean((score_reg - schools$quality)^2)
 })
+plot(alphas, rmse)
+alphas[which.min(rmse)] 
 
-qplot(alfas, rmses)  
-alfa <- alfas[which.min(rmses)]
+#q7
+#Rank the schools based on the average obtained with the best alpha.
+#Note that no small school is incorrectly included.
+
+#What is the ID of the top school now?
+#What is the regularized average score of the 10th school now? 
+overall <- mean(sapply(scores, mean))
+alfa <- 128
+schools <-schools %>% mutate (score_reg=overall + ((score - overall)*size/(size+alfa)))
+
+schools %>% select(id,size,score,score_reg,rank) %>% arrange(rank) %>% top_n(10, score_reg) 
+
+#A common mistake made when using regularization is shrinking values towards 0
+#that are not centered around 0. For example
+#if we don't subtract the overall average before shrinking, we actually obtain a very similar result. Confirm this by re-running the code from the exercise in Q6 but without removing the overall mean.
+
+#What value of  gives the minimum RMSE here?
+alphas <- seq(10,250)
+rmse <- sapply(alphas, function(alpha){
+  score_reg <- sapply(scores, function(x) sum(x)/(length(x)+alpha))
+  mean((score_reg - schools$quality)^2)
+})
+plot(alphas, rmse)
+alphas[which.min(rmse)] 

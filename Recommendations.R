@@ -100,6 +100,7 @@ rmse_results %>% knitr::kable()
 
 #What year has the highest median number of ratings?
 #mia risposta ok
+library(dplyr)
 movielens %>% group_by(movieId,year) %>% count(rating)  %>% ggplot(aes(year,n)) + 
     scale_y_sqrt() + geom_point()
 a$year[max(median(a$n))]
